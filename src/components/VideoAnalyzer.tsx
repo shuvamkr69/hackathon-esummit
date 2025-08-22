@@ -7,6 +7,7 @@ import { Progress } from '@/components/ui/progress';
 import { Upload, Play, Pause, RotateCcw, Shield, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
+import axios from 'axios';
 
 interface AnalysisResult {
   confidence: number;
@@ -15,9 +16,8 @@ interface AnalysisResult {
   frameAnalysis: {
     eyeContact: number;
     facialExpressions: number;
-    bodyMovement: number;
-    socialEngagement: number;
   };
+  tips?: string[];
 }
 
 export default function VideoAnalyzer() {
@@ -27,7 +27,7 @@ export default function VideoAnalyzer() {
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
   const [videoPreview, setVideoPreview] = useState<string | null>(null);
   const [isPlaying, setIsPlaying] = useState(false);
-  
+
   const videoRef = useRef<HTMLVideoElement>(null);
   const cardRef = useRef<HTMLDivElement>(null);
   const resultRef = useRef<HTMLDivElement>(null);
@@ -35,7 +35,7 @@ export default function VideoAnalyzer() {
 
   useGSAP(() => {
     if (cardRef.current) {
-      gsap.fromTo(cardRef.current, 
+      gsap.fromTo(cardRef.current,
         { opacity: 0, y: 50 },
         { opacity: 1, y: 0, duration: 1, ease: "power3.out" }
       );
@@ -55,16 +55,13 @@ export default function VideoAnalyzer() {
     const file = event.target.files?.[0];
     if (file && file.type.startsWith('video/')) {
       setSelectedFile(file);
-      
-      // Create preview URL
+
       const url = URL.createObjectURL(file);
       setVideoPreview(url);
-      
-      // Reset analysis
+
       setAnalysisResult(null);
       setProgress(0);
-      
-      // Animate file selection
+
       if (progressRef.current) {
         gsap.fromTo(progressRef.current,
           { opacity: 0, x: -50 },
@@ -74,37 +71,121 @@ export default function VideoAnalyzer() {
     }
   }, []);
 
-  const simulateAnalysis = useCallback(async () => {
+  const uploadAndAnalyze = useCallback(async () => {
+    if (!selectedFile) return;
+
     setIsAnalyzing(true);
-    setProgress(0);
-    
-    // Simulate analysis progress
-    for (let i = 0; i <= 100; i += 2) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-      setProgress(i);
-    }
-    
-    // Simulate analysis result
-    const mockResult: AnalysisResult = {
-      confidence: Math.random() * 30 + 20, // 20-50% confidence range
-      indicators: [
-        'Limited eye contact patterns detected',
-        'Repetitive movement behaviors observed',
-        'Reduced social engagement markers',
-        'Atypical facial expression patterns'
-      ],
-      timestamp: new Date().toISOString(),
-      frameAnalysis: {
-        eyeContact: Math.random() * 40 + 10,
-        facialExpressions: Math.random() * 35 + 15,
-        bodyMovement: Math.random() * 45 + 20,
-        socialEngagement: Math.random() * 30 + 10
+    setProgress(10);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", selectedFile);
+
+      const response = await axios.post("http://localhost:8000/analyze", formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+        timeout: 60000,
+        withCredentials: false,
+      });
+
+      const result = response.data;
+      setProgress(100);
+      console.log("Analysis result:", result);
+
+      // ----------------------------
+      // 🔹 Summarize API response
+      // ----------------------------
+      let avgConfidence = 0;
+      let majorityClass = "Unknown";
+
+      if (result.autism_predictions?.length) {
+        avgConfidence =
+          result.autism_predictions.reduce(
+            (sum: number, p: { confidence: number }) => sum + p.confidence,
+            0
+          ) / result.autism_predictions.length;
+
+        const autisticCount = result.autism_predictions.filter(
+          (p: { class: string }) => p.class === "Autistic"
+        ).length;
+        majorityClass =
+          autisticCount > result.autism_predictions.length / 2
+            ? "Autistic"
+            : "Non-Autistic";
       }
-    };
-    
-    setAnalysisResult(mockResult);
-    setIsAnalyzing(false);
-  }, []);
+
+      // Emotions → facial expressions score
+      let facialScore = 0;
+      if (result.emotions?.length) {
+        const emotionCounts: Record<string, number> = {};
+        result.emotions.forEach((e: string) => {
+          emotionCounts[e] = (emotionCounts[e] || 0) + 1;
+        });
+        const variety = Object.keys(emotionCounts).length;
+        facialScore = Math.min(100, (variety / result.emotions.length) * 100);
+      }
+
+      // Gaze → eye contact score
+      let eyeContactScore = 0;
+      if (result.gaze?.length) {
+        const detected = result.gaze.filter(
+          (g: string) => g !== "No face detected"
+        ).length;
+        eyeContactScore = (detected / result.gaze.length) * 100;
+      }
+
+      // ----------------------------
+      // 🔹 Handle visibility logic
+      // ----------------------------
+      const indicators: string[] = [];
+      const tips: string[] = [];
+
+      if (eyeContactScore < 50) {
+        indicators.push("Face not visible enough for reliable analysis.");
+      } else {
+        indicators.push(`Classified as: ${majorityClass}`);
+        indicators.push(`Eye contact score: ${eyeContactScore.toFixed(1)}%`);
+        indicators.push(`Facial expressiveness score: ${facialScore.toFixed(1)}%`);
+
+        if (avgConfidence * 100 > 70 && majorityClass === "Autistic") {
+          tips.push("Encourage more consistent eye contact during interactions.");
+          tips.push("Engage in activities that promote varied facial expressions (e.g., role-play, games).");
+        }
+      }
+
+      // ----------------------------
+      // 🔹 Map to frontend interface
+      // ----------------------------
+      const mappedResult: AnalysisResult = {
+        confidence: eyeContactScore < 50 ? 0 : avgConfidence * 100,
+        indicators,
+        tips,
+        timestamp: new Date().toISOString(),
+        frameAnalysis: {
+          eyeContact: eyeContactScore,
+          facialExpressions: facialScore,
+        }
+      };
+
+      setAnalysisResult(mappedResult);
+    } catch (error) {
+      console.error("Analysis failed:", error);
+      if (axios.isAxiosError(error)) {
+        if (error.code === 'ERR_NETWORK') {
+          alert("Cannot connect to analysis server. Please ensure the server is running on localhost:8000");
+        } else if (error.response) {
+          alert(`Server error: ${error.response.status} - ${error.response.data?.message || 'Unknown error'}`);
+        } else {
+          alert("Request timeout. Please try with a smaller video file.");
+        }
+      } else {
+        alert("Analysis failed. Please try again.");
+      }
+    } finally {
+      setIsAnalyzing(false);
+    }
+  }, [selectedFile]);
 
   const handleVideoToggle = () => {
     if (videoRef.current) {
@@ -124,14 +205,14 @@ export default function VideoAnalyzer() {
     setProgress(0);
     setIsAnalyzing(false);
     setIsPlaying(false);
-    
+
     if (videoPreview) {
       URL.revokeObjectURL(videoPreview);
     }
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 p-30">
+    <div className="max-w-4xl mx-auto space-y-6 p-6 pt-30">
       {/* Privacy Notice */}
       <Card className="border-green-200 bg-green-50/50 dark:bg-green-950/20 dark:border-green-800">
         <CardContent className="pt-6">
@@ -140,14 +221,14 @@ export default function VideoAnalyzer() {
             <div>
               <h3 className="font-semibold text-green-800 dark:text-green-200">Privacy Protected</h3>
               <p className="text-green-700 dark:text-green-300 text-sm">
-                Videos are processed locally and immediately discarded after analysis. No data is stored or transmitted.
+                Videos are processed locally on the server and discarded after analysis. No data is stored permanently.
               </p>
             </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Main Upload Card */}
+      {/* Upload Card */}
       <Card ref={cardRef} className="border-2 border-dashed border-muted-foreground/25 hover:border-primary/50 transition-colors">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
@@ -210,10 +291,10 @@ export default function VideoAnalyzer() {
                 </div>
               </div>
 
-              {/* Analysis Controls */}
+              {/* Controls */}
               <div className="flex gap-2">
                 <Button
-                  onClick={simulateAnalysis}
+                  onClick={uploadAndAnalyze}
                   disabled={isAnalyzing}
                   className="flex-1"
                 >
@@ -227,7 +308,7 @@ export default function VideoAnalyzer() {
             </div>
           )}
 
-          {/* Progress Bar */}
+          {/* Progress */}
           {isAnalyzing && (
             <div ref={progressRef} className="space-y-2">
               <div className="flex justify-between text-sm">
@@ -243,7 +324,7 @@ export default function VideoAnalyzer() {
         </CardContent>
       </Card>
 
-      {/* Analysis Results */}
+      {/* Results */}
       {analysisResult && (
         <Card ref={resultRef} className="border-2">
           <CardHeader>
@@ -256,57 +337,41 @@ export default function VideoAnalyzer() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
-            {/* Confidence Score */}
-            <div className="text-center p-6 bg-muted/50 rounded-lg">
-              <div className="text-3xl font-bold mb-2">
-                {analysisResult.confidence.toFixed(1)}%
+            {/* Confidence */}
+            {analysisResult.confidence > 0 ? (
+              <div className="text-center p-6 bg-muted/50 rounded-lg">
+                <div className="text-3xl font-bold mb-2">
+                  {analysisResult.confidence.toFixed(1)}%
+                </div>
+                <div className="text-sm text-muted-foreground">
+                  Confidence Level for Early Indicators
+                </div>
               </div>
-              <div className="text-sm text-muted-foreground">
-                Confidence Level for Early Indicators
+            ) : (
+              <div className="text-center p-6 bg-muted/50 rounded-lg text-red-600 font-medium">
+                Face not visible enough for reliable analysis.
               </div>
-              <div className="mt-2 flex items-center justify-center gap-2 text-orange-600">
-                <AlertTriangle className="h-4 w-4" />
-                <span className="text-xs">Low-to-moderate indicators detected</span>
-              </div>
-            </div>
+            )}
 
             {/* Frame Analysis */}
             <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Eye Contact</span>
-                    <span>{analysisResult.frameAnalysis.eyeContact.toFixed(1)}%</span>
-                  </div>
-                  <Progress value={analysisResult.frameAnalysis.eyeContact} className="h-2" />
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Eye Contact</span>
+                  <span>{analysisResult.frameAnalysis.eyeContact.toFixed(1)}%</span>
                 </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Facial Expressions</span>
-                    <span>{analysisResult.frameAnalysis.facialExpressions.toFixed(1)}%</span>
-                  </div>
-                  <Progress value={analysisResult.frameAnalysis.facialExpressions} className="h-2" />
-                </div>
+                <Progress value={analysisResult.frameAnalysis.eyeContact} className="h-2" />
               </div>
-              <div className="space-y-3">
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Body Movement</span>
-                    <span>{analysisResult.frameAnalysis.bodyMovement.toFixed(1)}%</span>
-                  </div>
-                  <Progress value={analysisResult.frameAnalysis.bodyMovement} className="h-2" />
+              <div>
+                <div className="flex justify-between text-sm mb-1">
+                  <span>Facial Expressions</span>
+                  <span>{analysisResult.frameAnalysis.facialExpressions.toFixed(1)}%</span>
                 </div>
-                <div>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span>Social Engagement</span>
-                    <span>{analysisResult.frameAnalysis.socialEngagement.toFixed(1)}%</span>
-                  </div>
-                  <Progress value={analysisResult.frameAnalysis.socialEngagement} className="h-2" />
-                </div>
+                <Progress value={analysisResult.frameAnalysis.facialExpressions} className="h-2" />
               </div>
             </div>
 
-            {/* Detected Indicators */}
+            {/* Indicators */}
             <div>
               <h4 className="font-semibold mb-3">Detected Indicators</h4>
               <div className="space-y-2">
@@ -318,6 +383,18 @@ export default function VideoAnalyzer() {
                 ))}
               </div>
             </div>
+
+            {/* Tips (if any) */}
+            {analysisResult.tips && analysisResult.tips.length > 0 && (
+              <div>
+                <h4 className="font-semibold mb-3">Supportive Tips</h4>
+                <ul className="list-disc list-inside space-y-1 text-sm text-green-700 dark:text-green-300">
+                  {analysisResult.tips.map((tip, idx) => (
+                    <li key={idx}>{tip}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
 
             {/* Disclaimer */}
             <div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">

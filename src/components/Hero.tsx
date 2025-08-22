@@ -3,12 +3,12 @@
 import React, { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { Shield, Brain, Upload, CheckCircle, ArrowRight, Play } from 'lucide-react';
+import { Shield, Brain, CheckCircle, ArrowRight, Play } from 'lucide-react';
 import Link from 'next/link';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 
-export default async function Hero() {
+export default function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
   

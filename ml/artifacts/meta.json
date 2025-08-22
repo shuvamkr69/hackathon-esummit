@@ -1,0 +1,4 @@
+{
+  "classes": ["Autistic", "Non Autistic"],
+  "input_size": 224
+}
