@@ -131,7 +131,7 @@ export default function VideoAnalyzer() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6 p-6">
+    <div className="max-w-4xl mx-auto space-y-6 p-30">
       {/* Privacy Notice */}
       <Card className="border-green-200 bg-green-50/50 dark:bg-green-950/20 dark:border-green-800">
         <CardContent className="pt-6">

@@ -1,5 +1,6 @@
 import { auth } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import Dashboard from '@/components/Dashboard'
 import VideoAnalyzer from '@/components/VideoAnalyzer'
 
 export default async function DashboardPage() {
@@ -10,16 +11,9 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">
-          Video Analysis Dashboard
-        </h1>
-        <p className="text-muted-foreground">
-          Upload and analyze classroom videos for early autism indicators
-        </p>
-      </div>
-      <VideoAnalyzer />
-    </div>
+    <>
+      <VideoAnalyzer/>
+      <Dashboard />
+    </>
   )
 }

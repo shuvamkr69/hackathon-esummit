@@ -8,9 +8,10 @@ import Link from 'next/link';
 import { useGSAP } from '@gsap/react';
 import gsap from 'gsap';
 
-export default function Hero() {
+export default async function Hero() {
   const heroRef = useRef<HTMLDivElement>(null);
   const featuresRef = useRef<HTMLDivElement>(null);
+  
 
   useGSAP(() => {
     const tl = gsap.timeline();
@@ -62,7 +63,7 @@ export default function Hero() {
 
           <div className="hero-buttons flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button size="lg" className="text-lg px-8 py-6" asChild>
-              <Link href="/sign-up">
+              <Link href="/dashboard">
                 Start Analysis
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
