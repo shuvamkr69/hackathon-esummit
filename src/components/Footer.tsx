@@ -14,11 +14,11 @@ export default function Footer() {
           <div className="space-y-4">
             <div className="flex items-center space-x-2">
               <Brain className="h-8 w-8 text-primary" />
-              <span className="font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              <span className="select-none pointer-events-none font-bold text-xl bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 AutismAI
               </span>
             </div>
-            <p className="text-muted-foreground text-sm leading-relaxed">
+            <p className="select-none pointer-events-none text-muted-foreground text-sm leading-relaxed">
               Advanced AI technology for early autism detection, supporting healthcare professionals 
               in providing timely interventions for better outcomes.
             </p>
@@ -43,7 +43,7 @@ export default function Footer() {
 
           {/* Quick Links */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-foreground">Quick Links</h3>
+            <h3 className="select-none pointer-events-none font-semibold text-foreground">Quick Links</h3>
             <div className="space-y-2">
               <Link href="/" className="block text-muted-foreground hover:text-primary transition-colors text-sm">
                 Home
@@ -64,7 +64,7 @@ export default function Footer() {
           </div>
 
           {/* Resources */}
-          <div className="space-y-4">
+          {/* <div className="space-y-4">
             <h3 className="font-semibold text-foreground">Resources</h3>
             <div className="space-y-2">
               <Link href="/research" className="block text-muted-foreground hover:text-primary transition-colors text-sm">
@@ -83,23 +83,23 @@ export default function Footer() {
                 FAQ
               </Link>
             </div>
-          </div>
+          </div> */}
 
           {/* Contact */}
           <div className="space-y-4">
-            <h3 className="font-semibold text-foreground">Contact</h3>
+            <h3 className="select-none pointer-events-none font-semibold text-foreground">Contact</h3>
             <div className="space-y-3">
-              <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+              <div className="select-none pointer-events-none flex items-center space-x-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
-                <span>support@autismai.com</span>
+                <span>shuvamkrsahu@gmail.com</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4" />
-                <span>+1 (555) 123-4567</span>
+                <span>+91 8910857746</span>
               </div>
               <div className="flex items-center space-x-2 text-sm text-muted-foreground">
                 <MapPin className="h-4 w-4" />
-                <span>San Francisco, CA</span>
+                <span>Bhubaneswar, Odisha</span>
               </div>
             </div>
           </div>
@@ -115,7 +115,7 @@ export default function Footer() {
             </div>
           </div>
           
-          <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+          {/* <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-sm text-muted-foreground">
               © 2025 AutismAI. All rights reserved. Built with privacy and ethics in mind.
             </p>
@@ -130,7 +130,7 @@ export default function Footer() {
                 Cookies
               </Link>
             </div>
-          </div>
+          </div> */}
         </div>
       </div>
     </footer>

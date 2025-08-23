@@ -15,24 +15,19 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # or ["http://localhost:3000"]
+    allow_origins=["*"],  
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Load the autism detection model once on startup
 autism_detector = AutismDetector(model_path="artifacts/autism_model.pth", meta_path="artifacts/meta.json")
 
 @app.post("/analyze")
 async def analyze_video(file: UploadFile = File(...)):
-    # Save uploaded video temporarily
     with tempfile.NamedTemporaryFile(delete=False, suffix=".mp4") as tmp:
         tmp.write(await file.read())
         video_path = tmp.name
-
-    # Step 1: Extract frames
-    frames = extract_frames(video_path, frame_skip=15)  # sample every 15th frame
+    frames = extract_frames(video_path, frame_skip=15) 
 
     results = {
         "autism_predictions": [],
@@ -40,21 +35,17 @@ async def analyze_video(file: UploadFile = File(...)):
         "emotions": []
     }
 
-    # Step 2: Run analysis on frames
     for frame in frames:
-        # Autism prediction
         pred = autism_detector.predict(frame)
         results["autism_predictions"].append(pred)
 
-        # Gaze analysis
         gaze = analyze_gaze(frame)
         results["gaze"].append(gaze)
 
-        # Emotion analysis
         emotion = analyze_emotions(frame)
         results["emotions"].append(emotion)
 
-    os.remove(video_path)  # cleanup temp file
+    os.remove(video_path)  
     return results
 
 

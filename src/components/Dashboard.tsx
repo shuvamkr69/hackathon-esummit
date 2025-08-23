@@ -39,7 +39,7 @@ export default function Dashboard() {
 
       {/* Overview Section */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <Card className='transition delay-50 duration-150 ease-in-out hover:-translate-y-1 hover:scale-105 border-2 hover:border-primary/50 transition-colors'>
+        <Card className='transition delay-50 duration-150 ease-in-out border-2 hover:border-primary/50 transition-colors'>
           <CardHeader>
             <CardTitle>Risk Score</CardTitle>
           </CardHeader>
@@ -48,7 +48,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className='transition delay-50 duration-150 ease-in-out hover:-translate-y-1 hover:scale-105 border-2 hover:border-primary/50 transition-colors'>
+        <Card className='transition delay-50 duration-150 ease-in-out border-2 hover:border-primary/50 transition-colors'>
           <CardHeader>
             <CardTitle>Key Indicators Detected</CardTitle>
           </CardHeader>
@@ -57,7 +57,7 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        <Card className='transition delay-50 duration-150 ease-in-out hover:-translate-y-1 hover:scale-105 border-2 hover:border-primary/50 transition-colors'>
+        <Card className='transition delay-50 duration-150 ease-in-out border-2 hover:border-primary/50 transition-colors'>
           <CardHeader>
             <CardTitle>Number of Analyses Run</CardTitle>
           </CardHeader>
@@ -109,7 +109,7 @@ export default function Dashboard() {
         <h2 className="text-lg font-semibold mb-4">Behavioral Trends</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {/* Eye Contact */}
-          <Card className='transition delay-50 duration-150 ease-in-out hover:-translate-y-1 hover:scale-105 border-2 hover:border-primary/50 transition-colors'>
+          <Card className='transition delay-50 duration-150 ease-in-out border-2 hover:border-primary/50 transition-colors'>
             <CardHeader>
               <CardTitle>Eye Contact</CardTitle>
             </CardHeader>
@@ -131,7 +131,7 @@ export default function Dashboard() {
           </Card>
 
           {/* Gestures */}
-          <Card className='transition delay-50 duration-150 ease-in-out hover:-translate-y-1 hover:scale-105 border-2 hover:border-primary/50 transition-colors'>
+          <Card className='transition delay-50 duration-150 ease-in-out border-2 hover:border-primary/50 transition-colors'>
             <CardHeader>
               <CardTitle>Gestures</CardTitle>
             </CardHeader>

@@ -22,10 +22,10 @@ export default function CTASection() {
       {/* CTA Section */}
       <div ref={ctaRef} className="text-center">
         <div className="cta-content bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+          <h2 className="select-none pointer-events-none text-3xl md:text-4xl font-bold text-white mb-4">
             Ready to Get Started?
           </h2>
-          <p className="text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
+          <p className="select-none pointer-events-none text-blue-100 text-lg mb-8 max-w-2xl mx-auto">
             Join healthcare professionals who trust our AI-powered autism detection technology 
             for early intervention support.
           </p>
