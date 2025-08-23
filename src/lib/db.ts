@@ -7,10 +7,15 @@ interface MongooseConnection {
     promise: Promise<Mongoose> | null;
 }
 
-let cached : MongooseConnection = (global as any).mongoose;
+// Extend the global object to include mongoose
+declare global {
+    var mongoose: MongooseConnection | undefined;
+}
+
+let cached: MongooseConnection = global.mongoose || { conn: null, promise: null };
 
 if (!cached) {
-    cached = (global as any).mongoose = { conn: null, promise: null };
+    cached = global.mongoose = { conn: null, promise: null };
 }
 
 export async function connectToDatabase() {

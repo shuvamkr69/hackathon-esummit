@@ -5,7 +5,6 @@ import { motion } from "motion/react";
 import { LampContainer } from "@/components/ui/lamp";
 import { Card, CardContent } from "@/components/ui/card";
 import { Brain, Heart, Shield, Users, Award, Target } from "lucide-react";
-import { GlowingEffect } from "./ui/glowing-effect";
 
 export default function AboutContent() {
   return (
@@ -192,7 +191,7 @@ export default function AboutContent() {
               <Users className="h-16 w-16 mx-auto mb-6" />
               <h3 className="text-2xl font-semibold mb-4">Join Our Mission</h3>
               <p className="text-blue-100 mb-8 max-w-2xl mx-auto">
-                Whether you're a healthcare professional, researcher, or advocate, 
+                Whether you&apos;re a healthcare professional, researcher, or advocate, 
                 we welcome collaboration to improve early autism detection and intervention.
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
