@@ -64,7 +64,7 @@ export default function MainHero() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-20">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-50">
         {/* Main Hero Content */}
         <div className="text-center space-y-20 ">
           <h1 className="hero-title text-4xl md:text-6xl lg:text-7xl font-normal">
@@ -98,7 +98,7 @@ export default function MainHero() {
             supporting healthcare professionals in early intervention strategies.
           </p> */}
 
-          <div className="hero-buttons flex flex-col sm:flex-row justify-center items-center">
+          <div className="hero-buttons flex flex-col sm:flex-row justify-center items-center pt-17">
             {/* <Button size="lg" className="text-lg px-8 py-6" asChild>
               <Link href="/dashboard">
                 Start Analysis
