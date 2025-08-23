@@ -13,7 +13,6 @@ export default async function DashboardPage() {
   return (
     <>
       <VideoAnalyzer/>
-      <Dashboard />
     </>
   )
 }

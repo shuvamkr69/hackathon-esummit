@@ -81,7 +81,7 @@ export default function VideoAnalyzer() {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      const response = await axios.post("http://localhost:8000/analyze", formData, {
+      const response = await axios.post("http://13.126.67.35:8000/analyze", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -173,7 +173,7 @@ export default function VideoAnalyzer() {
       console.error("Analysis failed:", error);
       if (axios.isAxiosError(error)) {
         if (error.code === 'ERR_NETWORK') {
-          alert("Cannot connect to analysis server. Please ensure the server is running on localhost:8000");
+          alert("Cannot connect to analysis server. Please ensure the server is running");
         } else if (error.response) {
           alert(`Server error: ${error.response.status} - ${error.response.data?.message || 'Unknown error'}`);
         } else {
@@ -221,7 +221,7 @@ export default function VideoAnalyzer() {
             <div>
               <h3 className="font-semibold text-green-800 dark:text-green-200">Privacy Protected</h3>
               <p className="text-green-700 dark:text-green-300 text-sm">
-                Videos are processed locally on the server and discarded after analysis. No data is stored permanently.
+                Videos are processed locally and discarded after analysis. No data is stored permanently.
               </p>
             </div>
           </div>
@@ -292,17 +292,22 @@ export default function VideoAnalyzer() {
               </div>
 
               {/* Controls */}
-              <div className="flex gap-2">
+              <div className="flex flex-col sm:flex-row gap-2">
                 <Button
                   onClick={uploadAndAnalyze}
                   disabled={isAnalyzing}
-                  className="flex-1"
+                  className="flex-1 w-full sm:w-auto text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
                 >
                   {isAnalyzing ? 'Analyzing...' : 'Start Analysis'}
                 </Button>
-                <Button variant="outline" onClick={resetAnalysis}>
-                  <RotateCcw className="h-4 w-4" />
-                  Reset
+                <Button 
+                  variant="outline" 
+                  onClick={resetAnalysis}
+                  className="w-full sm:w-auto text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
+                >
+                  <RotateCcw className="h-4 w-4 mr-2 sm:mr-0" />
+                  <span className="sm:hidden">Reset</span>
+                  <span className="hidden sm:inline">Reset</span>
                 </Button>
               </div>
             </div>

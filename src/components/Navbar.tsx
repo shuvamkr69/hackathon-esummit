@@ -22,16 +22,12 @@ export default function Navbar() {
   const navItems = [
     { name: 'Home', link: '/' },
     { name: 'About', link: '/about' },
-    { name: 'Privacy', link: '/privacy' },
-    { name: 'Terms', link: '/terms' },
     ...(isSignedIn ? [{ name: 'Dashboard', link: '/dashboard' }] : []),
   ];
 
   const mobileNavItems = [
     { name: 'Home', link: '/' },
     { name: 'About', link: '/about' },
-    { name: 'Privacy', link: '/privacy' },
-    { name: 'Terms', link: '/terms' },
     ...(isSignedIn ? [{ name: 'Dashboard', link: '/dashboard' }] : []),
   ];
 

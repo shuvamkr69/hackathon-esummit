@@ -24,17 +24,17 @@ export default function Footer() {
             </p>
             <div className="flex space-x-2">
               <Button variant="ghost" size="icon" asChild>
-                <Link href="https://github.com" target="_blank" rel="noopener noreferrer">
+                <Link href="https://github.com/shuvamkr69/hackathon-esummit" target="_blank" rel="noopener noreferrer">
                   <Github className="h-4 w-4" />
                 </Link>
               </Button>
-              <Button variant="ghost" size="icon" asChild>
+              {/* <Button variant="ghost" size="icon" asChild>
                 <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer">
                   <Twitter className="h-4 w-4" />
                 </Link>
-              </Button>
+              </Button> */}
               <Button variant="ghost" size="icon" asChild>
-                <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
+                <Link href="https://linkedin.com/in/shuvamkrsahu" target="_blank" rel="noopener noreferrer">
                   <Linkedin className="h-4 w-4" />
                 </Link>
               </Button>
@@ -53,12 +53,6 @@ export default function Footer() {
               </Link>
               <Link href="/dashboard" className="block text-muted-foreground hover:text-primary transition-colors text-sm">
                 Dashboard
-              </Link>
-              <Link href="/privacy" className="block text-muted-foreground hover:text-primary transition-colors text-sm">
-                Privacy Policy
-              </Link>
-              <Link href="/terms" className="block text-muted-foreground hover:text-primary transition-colors text-sm">
-                Terms of Service
               </Link>
             </div>
           </div>
