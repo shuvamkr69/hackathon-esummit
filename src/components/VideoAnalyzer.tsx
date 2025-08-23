@@ -81,7 +81,7 @@ export default function VideoAnalyzer() {
       const formData = new FormData();
       formData.append("file", selectedFile);
 
-      const response = await axios.post("http://13.126.67.35:8000/analyze", formData, {
+      const response = await axios.post("https://jxt7r9fn-8000.inc1.devtunnels.ms/analyze", formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -143,6 +143,7 @@ export default function VideoAnalyzer() {
 
       if (eyeContactScore < 50) {
         indicators.push("Face not visible enough for reliable analysis.");
+        
       } else {
         indicators.push(`Classified as: ${majorityClass}`);
         indicators.push(`Eye contact score: ${eyeContactScore.toFixed(1)}%`);
@@ -292,22 +293,17 @@ export default function VideoAnalyzer() {
               </div>
 
               {/* Controls */}
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex gap-2">
                 <Button
                   onClick={uploadAndAnalyze}
                   disabled={isAnalyzing}
-                  className="flex-1 w-full sm:w-auto text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
+                  className="flex-1"
                 >
                   {isAnalyzing ? 'Analyzing...' : 'Start Analysis'}
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={resetAnalysis}
-                  className="w-full sm:w-auto text-sm sm:text-base py-2 sm:py-3 px-4 sm:px-6"
-                >
-                  <RotateCcw className="h-4 w-4 mr-2 sm:mr-0" />
-                  <span className="sm:hidden">Reset</span>
-                  <span className="hidden sm:inline">Reset</span>
+                <Button variant="outline" onClick={resetAnalysis}>
+                  <RotateCcw className="h-4 w-4" />
+                  Reset
                 </Button>
               </div>
             </div>
@@ -358,23 +354,25 @@ export default function VideoAnalyzer() {
               </div>
             )}
 
-            {/* Frame Analysis */}
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Eye Contact</span>
-                  <span>{analysisResult.frameAnalysis.eyeContact.toFixed(1)}%</span>
+            {/* Frame Analysis - Only show if face is visible */}
+            {analysisResult.confidence > 0 && (
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Eye Contact</span>
+                    <span>{analysisResult.frameAnalysis.eyeContact.toFixed(1)}%</span>
+                  </div>
+                  <Progress value={analysisResult.frameAnalysis.eyeContact} className="h-2" />
                 </div>
-                <Progress value={analysisResult.frameAnalysis.eyeContact} className="h-2" />
-              </div>
-              <div>
-                <div className="flex justify-between text-sm mb-1">
-                  <span>Facial Expressions</span>
-                  <span>{analysisResult.frameAnalysis.facialExpressions.toFixed(1)}%</span>
+                <div>
+                  <div className="flex justify-between text-sm mb-1">
+                    <span>Facial Expressions</span>
+                    <span>{analysisResult.frameAnalysis.facialExpressions.toFixed(1)}%</span>
+                  </div>
+                  <Progress value={analysisResult.frameAnalysis.facialExpressions} className="h-2" />
                 </div>
-                <Progress value={analysisResult.frameAnalysis.facialExpressions} className="h-2" />
               </div>
-            </div>
+            )}
 
             {/* Indicators */}
             <div>

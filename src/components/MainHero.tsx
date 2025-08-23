@@ -64,17 +64,17 @@ export default function MainHero() {
         />
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-50">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 md:pt-32 pb-20 sm:pb-30 md:pb-50">
         {/* Main Hero Content */}
-        <div className="text-center space-y-20 ">
-          <h1 className="hero-title text-4xl md:text-6xl lg:text-7xl font-normal">
+        <div className="text-center space-y-8 sm:space-y-12 md:space-y-20">
+          <h1 className="hero-title text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-normal">
             <BlurText
                 text="Early Autism Detection"
                 delay={150}
                 animateBy="words"
                 direction="top"
                 onAnimationComplete={handleAnimationComplete}
-                className="hero-title text-4xl md:text-6xl lg:text-7xl font-normal justify-center items-center align-middle"
+                className="hero-title text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-normal justify-center items-center align-middle"
               />
             <span className="pointer-events-none select-none bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
               
@@ -98,17 +98,14 @@ export default function MainHero() {
             supporting healthcare professionals in early intervention strategies.
           </p> */}
 
-          <div className="hero-buttons flex flex-col sm:flex-row justify-center items-center pt-17">
-            {/* <Button size="lg" className="text-lg px-8 py-6" asChild>
-              <Link href="/dashboard">
-                Start Analysis
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button> */}
-            <HoverBorderGradient as="button" className="flex text-lg px-8 py-6">
-              <Link href="/dashboard">
-                Start Analysis
-                <ArrowRight className="ml-2 h-5 w-5" />
+          <div className="hero-buttons flex flex-col sm:flex-row justify-center items-center pt-8 sm:pt-12 md:pt-17 gap-4 max-w-md sm:max-w-lg mx-auto">
+            <HoverBorderGradient 
+              as="button" 
+              className="flex items-center justify-center w-full sm:w-auto text-sm sm:text-base md:text-lg px-6 sm:px-6 md:px-8 py-3 sm:py-4 md:py-6 rounded-full transition-all duration-300 min-w-[200px] sm:min-w-[220px]"
+            >
+              <Link href="/dashboard" className="flex items-center justify-center w-full">
+                <span className="mr-2 font-medium">Start Analysis</span>
+                <ArrowRight className="h-4 w-4 sm:h-5 sm:w-5" />
               </Link>
             </HoverBorderGradient>
 
